@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "CineVault",
+  "searchHint": "Movie title...",
+  "searchTitle": "Search Movies",
+  "noResults": "No results found",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "addToWatchlist": "Add to watchlist",
+  "releaseDateLabel": "Release date: {date}"
+}

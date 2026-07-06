@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1009854765526",
+    "project_id": "madiyar-test-app",
+    "storage_bucket": "madiyar-test-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009854765526:android:7380c4f61489145394ec77",
+        "android_client_info": {
+          "package_name": "com.example.watchlistapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi3XJ9dMchE751KFJo5BBUHX6LznKr88E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

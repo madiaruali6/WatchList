@@ -1,0 +1,43 @@
+{
+  "@@locale": "ru",
+
+  "appTitle": "CineVault",
+  "@appTitle": {
+    "description": "Название приложения"
+  },
+
+  "searchHint": "Название фильма...",
+  "@searchHint": {
+    "description": "Плейсхолдер в поле поиска"
+  },
+
+  "searchTitle": "Поиск фильмов",
+  "@searchTitle": {
+    "description": "Заголовок экрана поиска"
+  },
+
+  "noResults": "Ничего не найдено",
+  "@noResults": {
+    "description": "Сообщение при пустом результате поиска"
+  },
+
+  "errorGeneric": "Что-то пошло не так. Попробуйте ещё раз.",
+  "@errorGeneric": {
+    "description": "Общее сообщение об ошибке"
+  },
+
+  "addToWatchlist": "Добавить в список",
+  "@addToWatchlist": {
+    "description": "Кнопка добавления фильма в watchlist"
+  },
+
+  "releaseDateLabel": "Дата выхода: {date}",
+  "@releaseDateLabel": {
+    "description": "Дата выхода фильма",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
+}
