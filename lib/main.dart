@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'core/constants/app_theme.dart';
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'core/settings/app_settings_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'l10n/generated/app_localizations.dart';
 
@@ -26,13 +27,13 @@ Future<void> main() async {
   await setupDependencyInjection();
 
   runApp(
-    // BlocProvider теперь ВЫШЕ MaterialApp — это критично.
-    // Если обернуть только `home:`, то Navigator.push() на новые страницы
-    // (например RegisterPage) создаёт роуты ВНЕ этого дерева, и
-    // context.read<AuthBloc>() там не находит провайдер.
-    // Обернув весь MaterialApp, AuthBloc виден на любом экране,
-    // куда бы Navigator ни повёл.
-    BlocProvider.value(value: getIt<AuthBloc>(), child: const CineVaultApp()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: getIt<AuthBloc>()),
+        BlocProvider.value(value: getIt<AppSettingsCubit>()),
+      ],
+      child: const CineVaultApp(),
+    ),
   );
 }
 
@@ -48,13 +49,20 @@ class _CineVaultAppState extends State<CineVaultApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'CineVault',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: _router,
+    return BlocBuilder<AppSettingsCubit, AppSettingsState>(
+      builder: (context, settings) {
+        return MaterialApp.router(
+          title: 'CineVault',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: settings.themeMode,
+          locale: settings.locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: _router,
+        );
+      },
     );
   }
 }

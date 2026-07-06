@@ -9,10 +9,14 @@ import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/movies/presentation/bloc/movie_search_bloc.dart';
+import '../../features/movies/domain/entities/movie.dart';
+import '../../features/movies/presentation/pages/movie_details_page.dart';
 import '../../features/movies/presentation/pages/movie_search_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/watchlist/presentation/bloc/watchlist_bloc.dart';
+import '../../features/watchlist/presentation/bloc/watchlist_event.dart';
 import '../../features/watchlist/presentation/pages/watchlist_page.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../di/injection.dart';
 import 'app_routes.dart';
 
@@ -56,7 +60,8 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           return MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => getIt<WatchlistBloc>(param1: authState.user.id),
+                create: (_) => getIt<WatchlistBloc>(param1: authState.user.id)
+                  ..add(const WatchlistSubscriptionRequested()),
               ),
               BlocProvider(create: (_) => getIt<MovieSearchBloc>()),
             ],
@@ -69,6 +74,16 @@ GoRouter createAppRouter(AuthBloc authBloc) {
               GoRoute(
                 path: AppRoutes.search,
                 builder: (context, state) => const MovieSearchPage(),
+              ),
+              GoRoute(
+                path: AppRoutes.movieDetails,
+                builder: (context, state) {
+                  final movie = state.extra as Movie?;
+                  if (movie == null) {
+                    return const MovieSearchPage();
+                  }
+                  return MovieDetailsPage(movie: movie);
+                },
               ),
             ],
           ),
@@ -101,6 +116,8 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -111,13 +128,17 @@ class MainScaffold extends StatelessWidget {
             initialLocation: index == navigationShell.currentIndex,
           );
         },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.search), label: 'Поиск'),
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.bookmark),
-            label: 'Мой список',
+              icon: const Icon(Icons.search), label: l10n.searchNav),
+          NavigationDestination(
+            icon: const Icon(Icons.bookmark),
+            label: l10n.watchlistNav,
           ),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Настройки'),
+          NavigationDestination(
+            icon: const Icon(Icons.settings),
+            label: l10n.settingsNav,
+          ),
         ],
       ),
     );

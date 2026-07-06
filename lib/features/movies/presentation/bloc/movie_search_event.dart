@@ -23,6 +23,10 @@ class SearchQueryChanged extends MovieSearchEvent {
   List<Object?> get props => [query];
 }
 
+class SearchNextPageRequested extends MovieSearchEvent {
+  const SearchNextPageRequested();
+}
+
 class MovieViewed extends MovieSearchEvent {
   final Movie movie;
 

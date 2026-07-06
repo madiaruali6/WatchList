@@ -81,6 +81,13 @@ class MovieLocalDataSource {
     return rows.map((row) => row.query).toList();
   }
 
+  Future<int> getSearchesCount() async {
+    final count = database.searchHistoryEntries.query.count();
+    final query = database.selectOnly(database.searchHistoryEntries)
+      ..addColumns([count]);
+    return await query.map((row) => row.read(count) ?? 0).getSingle();
+  }
+
   Future<void> markRecentlyViewed(MovieModel movie) async {
     final now = DateTime.now();
     await database.transaction(() async {
@@ -114,6 +121,13 @@ class MovieLocalDataSource {
         .toList();
   }
 
+  Future<int> getViewedMoviesCount() async {
+    final count = database.recentMovieEntries.movieId.count();
+    final query = database.selectOnly(database.recentMovieEntries)
+      ..addColumns([count]);
+    return await query.map((row) => row.read(count) ?? 0).getSingle();
+  }
+
   String _normalizeQuery(String query) => query.trim().toLowerCase();
 
   CachedMoviesCompanion _movieToCompanion(MovieModel movie, DateTime cachedAt) {
@@ -124,6 +138,7 @@ class MovieLocalDataSource {
       posterPath: Value(movie.posterPath),
       releaseDate: Value(movie.releaseDate),
       voteAverage: Value(movie.voteAverage),
+      popularity: Value(movie.popularity),
       genreIds: Value(movie.genreIds.join(',')),
       cachedAt: Value(cachedAt),
     );
@@ -143,6 +158,7 @@ class MovieLocalDataSource {
       posterPath: movie.posterPath,
       releaseDate: movie.releaseDate,
       voteAverage: movie.voteAverage,
+      popularity: movie.popularity,
       genreIds: genreIds,
     );
   }

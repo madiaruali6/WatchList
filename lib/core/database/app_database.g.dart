@@ -46,6 +46,14 @@ class $CachedMoviesTable extends CachedMovies
       type: DriftSqlType.double,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
+  static const VerificationMeta _popularityMeta =
+      const VerificationMeta('popularity');
+  @override
+  late final GeneratedColumn<double> popularity = GeneratedColumn<double>(
+      'popularity', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _genreIdsMeta =
       const VerificationMeta('genreIds');
   @override
@@ -68,6 +76,7 @@ class $CachedMoviesTable extends CachedMovies
         posterPath,
         releaseDate,
         voteAverage,
+        popularity,
         genreIds,
         cachedAt
       ];
@@ -113,6 +122,12 @@ class $CachedMoviesTable extends CachedMovies
           voteAverage.isAcceptableOrUnknown(
               data['vote_average']!, _voteAverageMeta));
     }
+    if (data.containsKey('popularity')) {
+      context.handle(
+          _popularityMeta,
+          popularity.isAcceptableOrUnknown(
+              data['popularity']!, _popularityMeta));
+    }
     if (data.containsKey('genre_ids')) {
       context.handle(_genreIdsMeta,
           genreIds.isAcceptableOrUnknown(data['genre_ids']!, _genreIdsMeta));
@@ -144,6 +159,8 @@ class $CachedMoviesTable extends CachedMovies
           .read(DriftSqlType.string, data['${effectivePrefix}release_date']),
       voteAverage: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}vote_average'])!,
+      popularity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}popularity'])!,
       genreIds: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}genre_ids'])!,
       cachedAt: attachedDatabase.typeMapping
@@ -164,6 +181,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
   final String? posterPath;
   final String? releaseDate;
   final double voteAverage;
+  final double popularity;
   final String genreIds;
   final DateTime cachedAt;
   const CachedMovy(
@@ -173,6 +191,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
       this.posterPath,
       this.releaseDate,
       required this.voteAverage,
+      required this.popularity,
       required this.genreIds,
       required this.cachedAt});
   @override
@@ -190,6 +209,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
       map['release_date'] = Variable<String>(releaseDate);
     }
     map['vote_average'] = Variable<double>(voteAverage);
+    map['popularity'] = Variable<double>(popularity);
     map['genre_ids'] = Variable<String>(genreIds);
     map['cached_at'] = Variable<DateTime>(cachedAt);
     return map;
@@ -209,6 +229,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
           ? const Value.absent()
           : Value(releaseDate),
       voteAverage: Value(voteAverage),
+      popularity: Value(popularity),
       genreIds: Value(genreIds),
       cachedAt: Value(cachedAt),
     );
@@ -224,6 +245,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
       posterPath: serializer.fromJson<String?>(json['posterPath']),
       releaseDate: serializer.fromJson<String?>(json['releaseDate']),
       voteAverage: serializer.fromJson<double>(json['voteAverage']),
+      popularity: serializer.fromJson<double>(json['popularity']),
       genreIds: serializer.fromJson<String>(json['genreIds']),
       cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
     );
@@ -238,6 +260,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
       'posterPath': serializer.toJson<String?>(posterPath),
       'releaseDate': serializer.toJson<String?>(releaseDate),
       'voteAverage': serializer.toJson<double>(voteAverage),
+      'popularity': serializer.toJson<double>(popularity),
       'genreIds': serializer.toJson<String>(genreIds),
       'cachedAt': serializer.toJson<DateTime>(cachedAt),
     };
@@ -250,6 +273,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
           Value<String?> posterPath = const Value.absent(),
           Value<String?> releaseDate = const Value.absent(),
           double? voteAverage,
+          double? popularity,
           String? genreIds,
           DateTime? cachedAt}) =>
       CachedMovy(
@@ -259,6 +283,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
         posterPath: posterPath.present ? posterPath.value : this.posterPath,
         releaseDate: releaseDate.present ? releaseDate.value : this.releaseDate,
         voteAverage: voteAverage ?? this.voteAverage,
+        popularity: popularity ?? this.popularity,
         genreIds: genreIds ?? this.genreIds,
         cachedAt: cachedAt ?? this.cachedAt,
       );
@@ -273,6 +298,8 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
           data.releaseDate.present ? data.releaseDate.value : this.releaseDate,
       voteAverage:
           data.voteAverage.present ? data.voteAverage.value : this.voteAverage,
+      popularity:
+          data.popularity.present ? data.popularity.value : this.popularity,
       genreIds: data.genreIds.present ? data.genreIds.value : this.genreIds,
       cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
     );
@@ -287,6 +314,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
           ..write('posterPath: $posterPath, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('voteAverage: $voteAverage, ')
+          ..write('popularity: $popularity, ')
           ..write('genreIds: $genreIds, ')
           ..write('cachedAt: $cachedAt')
           ..write(')'))
@@ -295,7 +323,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
 
   @override
   int get hashCode => Object.hash(movieId, title, overview, posterPath,
-      releaseDate, voteAverage, genreIds, cachedAt);
+      releaseDate, voteAverage, popularity, genreIds, cachedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -306,6 +334,7 @@ class CachedMovy extends DataClass implements Insertable<CachedMovy> {
           other.posterPath == this.posterPath &&
           other.releaseDate == this.releaseDate &&
           other.voteAverage == this.voteAverage &&
+          other.popularity == this.popularity &&
           other.genreIds == this.genreIds &&
           other.cachedAt == this.cachedAt);
 }
@@ -317,6 +346,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
   final Value<String?> posterPath;
   final Value<String?> releaseDate;
   final Value<double> voteAverage;
+  final Value<double> popularity;
   final Value<String> genreIds;
   final Value<DateTime> cachedAt;
   const CachedMoviesCompanion({
@@ -326,6 +356,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
     this.posterPath = const Value.absent(),
     this.releaseDate = const Value.absent(),
     this.voteAverage = const Value.absent(),
+    this.popularity = const Value.absent(),
     this.genreIds = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
@@ -336,6 +367,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
     this.posterPath = const Value.absent(),
     this.releaseDate = const Value.absent(),
     this.voteAverage = const Value.absent(),
+    this.popularity = const Value.absent(),
     this.genreIds = const Value.absent(),
     required DateTime cachedAt,
   })  : title = Value(title),
@@ -347,6 +379,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
     Expression<String>? posterPath,
     Expression<String>? releaseDate,
     Expression<double>? voteAverage,
+    Expression<double>? popularity,
     Expression<String>? genreIds,
     Expression<DateTime>? cachedAt,
   }) {
@@ -357,6 +390,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
       if (posterPath != null) 'poster_path': posterPath,
       if (releaseDate != null) 'release_date': releaseDate,
       if (voteAverage != null) 'vote_average': voteAverage,
+      if (popularity != null) 'popularity': popularity,
       if (genreIds != null) 'genre_ids': genreIds,
       if (cachedAt != null) 'cached_at': cachedAt,
     });
@@ -369,6 +403,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
       Value<String?>? posterPath,
       Value<String?>? releaseDate,
       Value<double>? voteAverage,
+      Value<double>? popularity,
       Value<String>? genreIds,
       Value<DateTime>? cachedAt}) {
     return CachedMoviesCompanion(
@@ -378,6 +413,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
       posterPath: posterPath ?? this.posterPath,
       releaseDate: releaseDate ?? this.releaseDate,
       voteAverage: voteAverage ?? this.voteAverage,
+      popularity: popularity ?? this.popularity,
       genreIds: genreIds ?? this.genreIds,
       cachedAt: cachedAt ?? this.cachedAt,
     );
@@ -404,6 +440,9 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
     if (voteAverage.present) {
       map['vote_average'] = Variable<double>(voteAverage.value);
     }
+    if (popularity.present) {
+      map['popularity'] = Variable<double>(popularity.value);
+    }
     if (genreIds.present) {
       map['genre_ids'] = Variable<String>(genreIds.value);
     }
@@ -422,6 +461,7 @@ class CachedMoviesCompanion extends UpdateCompanion<CachedMovy> {
           ..write('posterPath: $posterPath, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('voteAverage: $voteAverage, ')
+          ..write('popularity: $popularity, ')
           ..write('genreIds: $genreIds, ')
           ..write('cachedAt: $cachedAt')
           ..write(')'))
@@ -1107,6 +1147,7 @@ typedef $$CachedMoviesTableCreateCompanionBuilder = CachedMoviesCompanion
   Value<String?> posterPath,
   Value<String?> releaseDate,
   Value<double> voteAverage,
+  Value<double> popularity,
   Value<String> genreIds,
   required DateTime cachedAt,
 });
@@ -1118,6 +1159,7 @@ typedef $$CachedMoviesTableUpdateCompanionBuilder = CachedMoviesCompanion
   Value<String?> posterPath,
   Value<String?> releaseDate,
   Value<double> voteAverage,
+  Value<double> popularity,
   Value<String> genreIds,
   Value<DateTime> cachedAt,
 });
@@ -1148,6 +1190,9 @@ class $$CachedMoviesTableFilterComposer
 
   ColumnFilters<double> get voteAverage => $composableBuilder(
       column: $table.voteAverage, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get popularity => $composableBuilder(
+      column: $table.popularity, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get genreIds => $composableBuilder(
       column: $table.genreIds, builder: (column) => ColumnFilters(column));
@@ -1183,6 +1228,9 @@ class $$CachedMoviesTableOrderingComposer
   ColumnOrderings<double> get voteAverage => $composableBuilder(
       column: $table.voteAverage, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<double> get popularity => $composableBuilder(
+      column: $table.popularity, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get genreIds => $composableBuilder(
       column: $table.genreIds, builder: (column) => ColumnOrderings(column));
 
@@ -1216,6 +1264,9 @@ class $$CachedMoviesTableAnnotationComposer
 
   GeneratedColumn<double> get voteAverage => $composableBuilder(
       column: $table.voteAverage, builder: (column) => column);
+
+  GeneratedColumn<double> get popularity => $composableBuilder(
+      column: $table.popularity, builder: (column) => column);
 
   GeneratedColumn<String> get genreIds =>
       $composableBuilder(column: $table.genreIds, builder: (column) => column);
@@ -1253,6 +1304,7 @@ class $$CachedMoviesTableTableManager extends RootTableManager<
             Value<String?> posterPath = const Value.absent(),
             Value<String?> releaseDate = const Value.absent(),
             Value<double> voteAverage = const Value.absent(),
+            Value<double> popularity = const Value.absent(),
             Value<String> genreIds = const Value.absent(),
             Value<DateTime> cachedAt = const Value.absent(),
           }) =>
@@ -1263,6 +1315,7 @@ class $$CachedMoviesTableTableManager extends RootTableManager<
             posterPath: posterPath,
             releaseDate: releaseDate,
             voteAverage: voteAverage,
+            popularity: popularity,
             genreIds: genreIds,
             cachedAt: cachedAt,
           ),
@@ -1273,6 +1326,7 @@ class $$CachedMoviesTableTableManager extends RootTableManager<
             Value<String?> posterPath = const Value.absent(),
             Value<String?> releaseDate = const Value.absent(),
             Value<double> voteAverage = const Value.absent(),
+            Value<double> popularity = const Value.absent(),
             Value<String> genreIds = const Value.absent(),
             required DateTime cachedAt,
           }) =>
@@ -1283,6 +1337,7 @@ class $$CachedMoviesTableTableManager extends RootTableManager<
             posterPath: posterPath,
             releaseDate: releaseDate,
             voteAverage: voteAverage,
+            popularity: popularity,
             genreIds: genreIds,
             cachedAt: cachedAt,
           ),

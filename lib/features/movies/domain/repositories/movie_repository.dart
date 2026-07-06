@@ -5,9 +5,11 @@ import '../entities/movie.dart';
 /// Presentation и domain зависят только от этого абстрактного класса,
 /// никогда от конкретной реализации.
 abstract class MovieRepository {
-  Future<List<Movie>> searchMovies(String query);
+  Future<List<Movie>> searchMovies(String query, {int page = 1});
   Future<List<Movie>> getPopularMovies({int page = 1});
   Future<List<String>> getSearchHistory();
+  Future<int> getSearchesCount();
   Future<List<Movie>> getRecentlyViewed();
+  Future<int> getViewedMoviesCount();
   Future<void> markRecentlyViewed(Movie movie);
 }

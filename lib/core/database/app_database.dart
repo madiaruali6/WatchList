@@ -14,6 +14,7 @@ class CachedMovies extends Table {
   TextColumn get posterPath => text().nullable()();
   TextColumn get releaseDate => text().nullable()();
   RealColumn get voteAverage => real().withDefault(const Constant(0))();
+  RealColumn get popularity => real().withDefault(const Constant(0))();
   TextColumn get genreIds => text().withDefault(const Constant(''))();
   DateTimeColumn get cachedAt => dateTime()();
 
@@ -59,7 +60,16 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 2) {
+            await migrator.addColumn(cachedMovies, cachedMovies.popularity);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

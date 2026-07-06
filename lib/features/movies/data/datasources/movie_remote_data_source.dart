@@ -8,10 +8,10 @@ class MovieRemoteDataSource {
 
   MovieRemoteDataSource(this.dio);
 
-  Future<List<MovieModel>> searchMovies(String query) async {
+  Future<List<MovieModel>> searchMovies(String query, {int page = 1}) async {
     final response = await dio.get(
       '/search/movie',
-      queryParameters: {'query': query},
+      queryParameters: {'query': query, 'page': page},
     );
     final parsed = MovieSearchResponseModel.fromJson(response.data);
     return parsed.results;

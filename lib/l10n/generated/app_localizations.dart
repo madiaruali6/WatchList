@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_kk.dart';
 import 'app_localizations_ru.dart';
 
 // ignore_for_file: type=lint
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('kk'),
     Locale('ru')
   ];
 
@@ -139,6 +141,300 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Дата выхода: {date}'**
   String releaseDateLabel(String date);
+
+  /// No description provided for @searchNav.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск'**
+  String get searchNav;
+
+  /// No description provided for @watchlistNav.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мой список'**
+  String get watchlistNav;
+
+  /// No description provided for @settingsNav.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки'**
+  String get settingsNav;
+
+  /// No description provided for @searchHistoryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'История поиска'**
+  String get searchHistoryTitle;
+
+  /// No description provided for @recentlyViewedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недавно просмотренные'**
+  String get recentlyViewedTitle;
+
+  /// No description provided for @loadMoreError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось загрузить ещё фильмы'**
+  String get loadMoreError;
+
+  /// No description provided for @watchlistTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мой список'**
+  String get watchlistTitle;
+
+  /// No description provided for @watchlistEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список пуст. Добавь фильмы через поиск!'**
+  String get watchlistEmpty;
+
+  /// No description provided for @ratingLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг:'**
+  String get ratingLabel;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки'**
+  String get settingsTitle;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Профиль'**
+  String get profileTitle;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In ru, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profileJoined.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата регистрации'**
+  String get profileJoined;
+
+  /// No description provided for @profileFavorites.
+  ///
+  /// In ru, this message translates to:
+  /// **'Избранное'**
+  String get profileFavorites;
+
+  /// No description provided for @profileViewed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просмотрено'**
+  String get profileViewed;
+
+  /// No description provided for @profileWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просмотренные'**
+  String get profileWatched;
+
+  /// No description provided for @profileUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Неизвестно'**
+  String get profileUnknown;
+
+  /// No description provided for @profileUserFallback.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пользователь'**
+  String get profileUserFallback;
+
+  /// No description provided for @preferencesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Предпочтения'**
+  String get preferencesTitle;
+
+  /// No description provided for @languageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get languageTitle;
+
+  /// No description provided for @languageRussian.
+  ///
+  /// In ru, this message translates to:
+  /// **'Русский'**
+  String get languageRussian;
+
+  /// No description provided for @languageKazakh.
+  ///
+  /// In ru, this message translates to:
+  /// **'Казахский'**
+  String get languageKazakh;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In ru, this message translates to:
+  /// **'Английский'**
+  String get languageEnglish;
+
+  /// No description provided for @darkThemeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тёмная тема'**
+  String get darkThemeTitle;
+
+  /// No description provided for @signOut.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти из аккаунта'**
+  String get signOut;
+
+  /// No description provided for @descriptionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Описание'**
+  String get descriptionTitle;
+
+  /// No description provided for @descriptionEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Описание недоступно.'**
+  String get descriptionEmpty;
+
+  /// No description provided for @statusTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get statusTitle;
+
+  /// No description provided for @statusWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Watched'**
+  String get statusWatched;
+
+  /// No description provided for @statusWatching.
+  ///
+  /// In ru, this message translates to:
+  /// **'Watching'**
+  String get statusWatching;
+
+  /// No description provided for @statusPlanToWatch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Plan to Watch'**
+  String get statusPlanToWatch;
+
+  /// No description provided for @statusDropped.
+  ///
+  /// In ru, this message translates to:
+  /// **'Dropped'**
+  String get statusDropped;
+
+  /// No description provided for @myRatingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Моя оценка'**
+  String get myRatingTitle;
+
+  /// No description provided for @notesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заметки'**
+  String get notesTitle;
+
+  /// No description provided for @notesHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очень понравился конец. Пересмотреть позже.'**
+  String get notesHint;
+
+  /// No description provided for @filtersTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Жанры'**
+  String get filtersTitle;
+
+  /// No description provided for @sortByTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сортировка'**
+  String get sortByTitle;
+
+  /// No description provided for @sortRating.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг'**
+  String get sortRating;
+
+  /// No description provided for @sortReleaseDate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата выхода'**
+  String get sortReleaseDate;
+
+  /// No description provided for @sortPopularity.
+  ///
+  /// In ru, this message translates to:
+  /// **'Популярность'**
+  String get sortPopularity;
+
+  /// No description provided for @sortAz.
+  ///
+  /// In ru, this message translates to:
+  /// **'A-Z'**
+  String get sortAz;
+
+  /// No description provided for @listWantToWatch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Want to Watch'**
+  String get listWantToWatch;
+
+  /// No description provided for @listWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Watched'**
+  String get listWatched;
+
+  /// No description provided for @listDropped.
+  ///
+  /// In ru, this message translates to:
+  /// **'Dropped'**
+  String get listDropped;
+
+  /// No description provided for @statisticsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статистика'**
+  String get statisticsTitle;
+
+  /// No description provided for @statsMoviesWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Movies watched'**
+  String get statsMoviesWatched;
+
+  /// No description provided for @statsFavorites.
+  ///
+  /// In ru, this message translates to:
+  /// **'Favorites'**
+  String get statsFavorites;
+
+  /// No description provided for @statsSearches.
+  ///
+  /// In ru, this message translates to:
+  /// **'Searches'**
+  String get statsSearches;
+
+  /// No description provided for @statsAverageRating.
+  ///
+  /// In ru, this message translates to:
+  /// **'Average rating'**
+  String get statsAverageRating;
 }
 
 class _AppLocalizationsDelegate
@@ -152,7 +448,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'ru'].contains(locale.languageCode);
+      <String>['en', 'kk', 'ru'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -163,6 +459,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'kk':
+      return AppLocalizationsKk();
     case 'ru':
       return AppLocalizationsRu();
   }

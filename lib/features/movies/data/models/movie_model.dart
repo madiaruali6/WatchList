@@ -17,6 +17,7 @@ class MovieModel with _$MovieModel {
     @JsonKey(name: 'poster_path') String? posterPath,
     @JsonKey(name: 'release_date') String? releaseDate,
     @JsonKey(name: 'vote_average') @Default(0.0) double voteAverage,
+    @Default(0.0) double popularity,
     @JsonKey(name: 'genre_ids') @Default([]) List<int> genreIds,
   }) = _MovieModel;
 
@@ -32,6 +33,7 @@ class MovieModel with _$MovieModel {
       posterPath: posterPath,
       releaseDate: releaseDate,
       voteAverage: voteAverage,
+      popularity: popularity,
       genreIds: genreIds,
     );
   }

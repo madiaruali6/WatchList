@@ -13,13 +13,17 @@ class MovieRepositoryImpl implements MovieRepository {
   MovieRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<List<Movie>> searchMovies(String query) async {
+  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
     try {
-      final models = await remoteDataSource.searchMovies(query);
-      await localDataSource.cacheSearchResults(query: query, movies: models);
+      final models = await remoteDataSource.searchMovies(query, page: page);
+      if (page == 1) {
+        await localDataSource.cacheSearchResults(query: query, movies: models);
+      }
       return models.map((model) => model.toEntity()).toList();
     } catch (e) {
-      final cachedModels = await localDataSource.getCachedSearchResults(query);
+      final cachedModels = page == 1
+          ? await localDataSource.getCachedSearchResults(query)
+          : <MovieModel>[];
       if (cachedModels.isNotEmpty) {
         return cachedModels.map((model) => model.toEntity()).toList();
       }
@@ -43,9 +47,19 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
+  Future<int> getSearchesCount() {
+    return localDataSource.getSearchesCount();
+  }
+
+  @override
   Future<List<Movie>> getRecentlyViewed() async {
     final models = await localDataSource.getRecentlyViewed();
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
+  Future<int> getViewedMoviesCount() {
+    return localDataSource.getViewedMoviesCount();
   }
 
   @override
@@ -61,6 +75,7 @@ class MovieRepositoryImpl implements MovieRepository {
       posterPath: movie.posterPath,
       releaseDate: movie.releaseDate,
       voteAverage: movie.voteAverage,
+      popularity: movie.popularity,
       genreIds: movie.genreIds,
     );
   }

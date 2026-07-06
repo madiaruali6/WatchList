@@ -29,6 +29,7 @@ class MovieSearchBloc extends Bloc<MovieSearchEvent, MovieSearchState> {
       _onSearchQueryChanged,
       transformer: _debounceRestartable(const Duration(milliseconds: 450)),
     );
+    on<SearchNextPageRequested>(_onSearchNextPageRequested);
     on<MovieViewed>(_onMovieViewed);
   }
 
@@ -65,10 +66,66 @@ class MovieSearchBloc extends Bloc<MovieSearchEvent, MovieSearchState> {
       // пока ждали ответ от сервера
       if (_latestQuery != event.query) return;
 
-      emit(MovieSearchLoaded(query: event.query, movies: movies));
+      emit(
+        MovieSearchLoaded(
+          query: event.query,
+          movies: movies,
+          hasReachedEnd: movies.isEmpty,
+        ),
+      );
     } catch (e) {
       if (_latestQuery != event.query) return;
       emit(MovieSearchError(query: event.query, message: e.toString()));
+    }
+  }
+
+  Future<void> _onSearchNextPageRequested(
+    SearchNextPageRequested event,
+    Emitter<MovieSearchState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! MovieSearchLoaded ||
+        currentState.isLoadingMore ||
+        currentState.hasReachedEnd) {
+      return;
+    }
+
+    final nextPage = currentState.page + 1;
+    emit(
+      currentState.copyWith(
+        isLoadingMore: true,
+        clearLoadMoreError: true,
+      ),
+    );
+
+    try {
+      final movies = await searchMoviesUseCase(
+        currentState.query,
+        page: nextPage,
+      );
+
+      if (_latestQuery != currentState.query) return;
+
+      final existingIds = currentState.movies.map((movie) => movie.id).toSet();
+      final newMovies =
+          movies.where((movie) => !existingIds.contains(movie.id)).toList();
+
+      emit(
+        currentState.copyWith(
+          movies: [...currentState.movies, ...newMovies],
+          page: nextPage,
+          hasReachedEnd: movies.isEmpty,
+          isLoadingMore: false,
+        ),
+      );
+    } catch (e) {
+      if (_latestQuery != currentState.query) return;
+      emit(
+        currentState.copyWith(
+          isLoadingMore: false,
+          loadMoreError: e.toString(),
+        ),
+      );
     }
   }
 

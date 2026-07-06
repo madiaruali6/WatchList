@@ -8,7 +8,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
   AuthRepositoryImpl(this.remoteDataSource);
 
-  AppUser _mapUser(fb.User user) => AppUser(id: user.uid, email: user.email);
+  AppUser _mapUser(fb.User user) => AppUser(
+        id: user.uid,
+        email: user.email,
+        joinedAt: user.metadata.creationTime,
+      );
 
   @override
   AppUser? get currentUser {

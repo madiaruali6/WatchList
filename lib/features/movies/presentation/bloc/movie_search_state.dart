@@ -35,11 +35,48 @@ class MovieSearchLoading extends MovieSearchState {
 /// Успешно получили результаты
 class MovieSearchLoaded extends MovieSearchState {
   final List<Movie> movies;
+  final int page;
+  final bool hasReachedEnd;
+  final bool isLoadingMore;
+  final String? loadMoreError;
 
-  const MovieSearchLoaded({required super.query, required this.movies});
+  const MovieSearchLoaded({
+    required super.query,
+    required this.movies,
+    this.page = 1,
+    this.hasReachedEnd = false,
+    this.isLoadingMore = false,
+    this.loadMoreError,
+  });
+
+  MovieSearchLoaded copyWith({
+    List<Movie>? movies,
+    int? page,
+    bool? hasReachedEnd,
+    bool? isLoadingMore,
+    String? loadMoreError,
+    bool clearLoadMoreError = false,
+  }) {
+    return MovieSearchLoaded(
+      query: query,
+      movies: movies ?? this.movies,
+      page: page ?? this.page,
+      hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      loadMoreError:
+          clearLoadMoreError ? null : loadMoreError ?? this.loadMoreError,
+    );
+  }
 
   @override
-  List<Object?> get props => [query, movies];
+  List<Object?> get props => [
+        query,
+        movies,
+        page,
+        hasReachedEnd,
+        isLoadingMore,
+        loadMoreError,
+      ];
 }
 
 /// Произошла ошибка

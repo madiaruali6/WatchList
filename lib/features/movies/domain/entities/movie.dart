@@ -11,6 +11,7 @@ class Movie extends Equatable {
   final String? posterPath;
   final String? releaseDate;
   final double voteAverage;
+  final double popularity;
   final List<int> genreIds;
 
   const Movie({
@@ -20,6 +21,7 @@ class Movie extends Equatable {
     this.posterPath,
     this.releaseDate,
     this.voteAverage = 0.0,
+    this.popularity = 0.0,
     this.genreIds = const [],
   });
 
@@ -31,6 +33,7 @@ class Movie extends Equatable {
         posterPath,
         releaseDate,
         voteAverage,
+        popularity,
         genreIds,
       ];
 }

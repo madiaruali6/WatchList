@@ -13,11 +13,11 @@ class SearchMoviesUseCase {
 
   SearchMoviesUseCase(this.repository);
 
-  Future<List<Movie>> call(String query) async {
+  Future<List<Movie>> call(String query, {int page = 1}) async {
     final trimmedQuery = query.trim();
     if (trimmedQuery.length < 2) {
       return [];
     }
-    return repository.searchMovies(trimmedQuery);
+    return repository.searchMovies(trimmedQuery, page: page);
   }
 }

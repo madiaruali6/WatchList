@@ -29,6 +29,7 @@ mixin _$MovieModel {
   String? get releaseDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'vote_average')
   double get voteAverage => throw _privateConstructorUsedError;
+  double get popularity => throw _privateConstructorUsedError;
   @JsonKey(name: 'genre_ids')
   List<int> get genreIds => throw _privateConstructorUsedError;
 
@@ -55,6 +56,7 @@ abstract class $MovieModelCopyWith<$Res> {
       @JsonKey(name: 'poster_path') String? posterPath,
       @JsonKey(name: 'release_date') String? releaseDate,
       @JsonKey(name: 'vote_average') double voteAverage,
+      double popularity,
       @JsonKey(name: 'genre_ids') List<int> genreIds});
 }
 
@@ -79,6 +81,7 @@ class _$MovieModelCopyWithImpl<$Res, $Val extends MovieModel>
     Object? posterPath = freezed,
     Object? releaseDate = freezed,
     Object? voteAverage = null,
+    Object? popularity = null,
     Object? genreIds = null,
   }) {
     return _then(_value.copyWith(
@@ -106,6 +109,10 @@ class _$MovieModelCopyWithImpl<$Res, $Val extends MovieModel>
           ? _value.voteAverage
           : voteAverage // ignore: cast_nullable_to_non_nullable
               as double,
+      popularity: null == popularity
+          ? _value.popularity
+          : popularity // ignore: cast_nullable_to_non_nullable
+              as double,
       genreIds: null == genreIds
           ? _value.genreIds
           : genreIds // ignore: cast_nullable_to_non_nullable
@@ -129,6 +136,7 @@ abstract class _$$MovieModelImplCopyWith<$Res>
       @JsonKey(name: 'poster_path') String? posterPath,
       @JsonKey(name: 'release_date') String? releaseDate,
       @JsonKey(name: 'vote_average') double voteAverage,
+      double popularity,
       @JsonKey(name: 'genre_ids') List<int> genreIds});
 }
 
@@ -151,6 +159,7 @@ class __$$MovieModelImplCopyWithImpl<$Res>
     Object? posterPath = freezed,
     Object? releaseDate = freezed,
     Object? voteAverage = null,
+    Object? popularity = null,
     Object? genreIds = null,
   }) {
     return _then(_$MovieModelImpl(
@@ -178,6 +187,10 @@ class __$$MovieModelImplCopyWithImpl<$Res>
           ? _value.voteAverage
           : voteAverage // ignore: cast_nullable_to_non_nullable
               as double,
+      popularity: null == popularity
+          ? _value.popularity
+          : popularity // ignore: cast_nullable_to_non_nullable
+              as double,
       genreIds: null == genreIds
           ? _value._genreIds
           : genreIds // ignore: cast_nullable_to_non_nullable
@@ -196,6 +209,7 @@ class _$MovieModelImpl extends _MovieModel {
       @JsonKey(name: 'poster_path') this.posterPath,
       @JsonKey(name: 'release_date') this.releaseDate,
       @JsonKey(name: 'vote_average') this.voteAverage = 0.0,
+      this.popularity = 0.0,
       @JsonKey(name: 'genre_ids') final List<int> genreIds = const []})
       : _genreIds = genreIds,
         super._();
@@ -218,6 +232,9 @@ class _$MovieModelImpl extends _MovieModel {
   @override
   @JsonKey(name: 'vote_average')
   final double voteAverage;
+  @override
+  @JsonKey()
+  final double popularity;
   final List<int> _genreIds;
   @override
   @JsonKey(name: 'genre_ids')
@@ -229,7 +246,7 @@ class _$MovieModelImpl extends _MovieModel {
 
   @override
   String toString() {
-    return 'MovieModel(id: $id, title: $title, overview: $overview, posterPath: $posterPath, releaseDate: $releaseDate, voteAverage: $voteAverage, genreIds: $genreIds)';
+    return 'MovieModel(id: $id, title: $title, overview: $overview, posterPath: $posterPath, releaseDate: $releaseDate, voteAverage: $voteAverage, popularity: $popularity, genreIds: $genreIds)';
   }
 
   @override
@@ -247,13 +264,23 @@ class _$MovieModelImpl extends _MovieModel {
                 other.releaseDate == releaseDate) &&
             (identical(other.voteAverage, voteAverage) ||
                 other.voteAverage == voteAverage) &&
+            (identical(other.popularity, popularity) ||
+                other.popularity == popularity) &&
             const DeepCollectionEquality().equals(other._genreIds, _genreIds));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, overview, posterPath,
-      releaseDate, voteAverage, const DeepCollectionEquality().hash(_genreIds));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      overview,
+      posterPath,
+      releaseDate,
+      voteAverage,
+      popularity,
+      const DeepCollectionEquality().hash(_genreIds));
 
   /// Create a copy of MovieModel
   /// with the given fields replaced by the non-null parameter values.
@@ -279,6 +306,7 @@ abstract class _MovieModel extends MovieModel {
       @JsonKey(name: 'poster_path') final String? posterPath,
       @JsonKey(name: 'release_date') final String? releaseDate,
       @JsonKey(name: 'vote_average') final double voteAverage,
+      final double popularity,
       @JsonKey(name: 'genre_ids') final List<int> genreIds}) = _$MovieModelImpl;
   const _MovieModel._() : super._();
 
@@ -300,6 +328,8 @@ abstract class _MovieModel extends MovieModel {
   @override
   @JsonKey(name: 'vote_average')
   double get voteAverage;
+  @override
+  double get popularity;
   @override
   @JsonKey(name: 'genre_ids')
   List<int> get genreIds;
