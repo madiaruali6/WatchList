@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/config/api_config.dart';
@@ -25,12 +26,13 @@ class MovieListItem extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: posterUrl.isNotEmpty
-            ? Image.network(
-                posterUrl,
+            ? CachedNetworkImage(
+                imageUrl: posterUrl,
                 width: 50,
                 height: 75,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _placeholderIcon(),
+                placeholder: (_, __) => _posterPlaceholder(),
+                errorWidget: (_, __, ___) => _placeholderIcon(),
               )
             : _placeholderIcon(),
       ),
@@ -87,6 +89,14 @@ class MovieListItem extends StatelessWidget {
       height: 75,
       color: AppColors.background,
       child: const Icon(Icons.movie, color: AppColors.textSecondary),
+    );
+  }
+
+  Widget _posterPlaceholder() {
+    return Container(
+      width: 50,
+      height: 75,
+      color: AppColors.background,
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stream_transform/stream_transform.dart';
+import '../../domain/usecases/get_search_overview_usecase.dart';
+import '../../domain/usecases/mark_movie_viewed_usecase.dart';
 import '../../domain/usecases/search_movies_usecase.dart';
 import 'movie_search_event.dart';
 import 'movie_search_state.dart';
@@ -8,15 +11,38 @@ import 'movie_search_state.dart';
 /// UI шлёт Event -> BLoC вызывает use case -> BLoC отдаёт новый State -> UI перерисовывается.
 class MovieSearchBloc extends Bloc<MovieSearchEvent, MovieSearchState> {
   final SearchMoviesUseCase searchMoviesUseCase;
+  final GetSearchOverviewUseCase getSearchOverviewUseCase;
+  final MarkMovieViewedUseCase markMovieViewedUseCase;
 
   // Храним текущий запрос, чтобы игнорировать устаревшие ответы
   // (если пользователь быстро печатает, не хотим, чтобы старый
   // медленный ответ перезаписал новый результат)
   String _latestQuery = '';
 
-  MovieSearchBloc(this.searchMoviesUseCase)
-      : super(const MovieSearchInitial()) {
-    on<SearchQueryChanged>(_onSearchQueryChanged);
+  MovieSearchBloc(
+    this.searchMoviesUseCase,
+    this.getSearchOverviewUseCase,
+    this.markMovieViewedUseCase,
+  ) : super(const MovieSearchInitial()) {
+    on<MovieSearchStarted>(_onMovieSearchStarted);
+    on<SearchQueryChanged>(
+      _onSearchQueryChanged,
+      transformer: _debounceRestartable(const Duration(milliseconds: 450)),
+    );
+    on<MovieViewed>(_onMovieViewed);
+  }
+
+  Future<void> _onMovieSearchStarted(
+    MovieSearchStarted event,
+    Emitter<MovieSearchState> emit,
+  ) async {
+    final overview = await getSearchOverviewUseCase();
+    emit(
+      MovieSearchInitial(
+        history: overview.history,
+        recentlyViewed: overview.recentlyViewed,
+      ),
+    );
   }
 
   Future<void> _onSearchQueryChanged(
@@ -32,14 +58,6 @@ class MovieSearchBloc extends Bloc<MovieSearchEvent, MovieSearchState> {
 
     emit(MovieSearchLoading(query: event.query));
 
-    // Debounce: ждём 400мс тишины перед реальным запросом,
-    // чтобы не слать запрос на каждую напечатанную букву
-    await Future.delayed(const Duration(milliseconds: 400));
-
-    // Если за время ожидания пользователь напечатал что-то ещё —
-    // этот запрос устарел, прерываем
-    if (_latestQuery != event.query) return;
-
     try {
       final movies = await searchMoviesUseCase(event.query);
 
@@ -52,5 +70,16 @@ class MovieSearchBloc extends Bloc<MovieSearchEvent, MovieSearchState> {
       if (_latestQuery != event.query) return;
       emit(MovieSearchError(query: event.query, message: e.toString()));
     }
+  }
+
+  Future<void> _onMovieViewed(
+    MovieViewed event,
+    Emitter<MovieSearchState> emit,
+  ) async {
+    await markMovieViewedUseCase(event.movie);
+  }
+
+  EventTransformer<E> _debounceRestartable<E>(Duration duration) {
+    return (events, mapper) => events.debounce(duration).switchMap(mapper);
   }
 }

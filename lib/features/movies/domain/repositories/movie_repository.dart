@@ -7,4 +7,7 @@ import '../entities/movie.dart';
 abstract class MovieRepository {
   Future<List<Movie>> searchMovies(String query);
   Future<List<Movie>> getPopularMovies({int page = 1});
+  Future<List<String>> getSearchHistory();
+  Future<List<Movie>> getRecentlyViewed();
+  Future<void> markRecentlyViewed(Movie movie);
 }

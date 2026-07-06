@@ -6,6 +6,7 @@ import '../bloc/movie_search_bloc.dart';
 import '../bloc/movie_search_event.dart';
 import '../bloc/movie_search_state.dart';
 import '../widgets/movie_list_item.dart';
+import '../widgets/movie_search_shimmer.dart';
 
 class MovieSearchPage extends StatefulWidget {
   const MovieSearchPage({super.key});
@@ -23,6 +24,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
     _searchController = TextEditingController(
       text: context.read<MovieSearchBloc>().state.query,
     );
+    context.read<MovieSearchBloc>().add(const MovieSearchStarted());
   }
 
   @override
@@ -56,10 +58,19 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
             child: BlocBuilder<MovieSearchBloc, MovieSearchState>(
               builder: (context, state) {
                 if (state is MovieSearchInitial) {
-                  return const SizedBox.shrink();
+                  return _SearchOverview(
+                    history: state.history,
+                    recentlyViewed: state.recentlyViewed,
+                    onQuerySelected: (query) {
+                      _searchController.text = query;
+                      context.read<MovieSearchBloc>().add(
+                            SearchQueryChanged(query),
+                          );
+                    },
+                  );
                 }
                 if (state is MovieSearchLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const MovieSearchShimmer();
                 }
                 if (state is MovieSearchError) {
                   return Center(
@@ -75,7 +86,15 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
                   return ListView.builder(
                     itemCount: state.movies.length,
                     itemBuilder: (context, index) {
-                      return MovieListItem(movie: state.movies[index]);
+                      final movie = state.movies[index];
+                      return MovieListItem(
+                        movie: movie,
+                        onTap: () {
+                          context.read<MovieSearchBloc>().add(
+                                MovieViewed(movie),
+                              );
+                        },
+                      );
                     },
                   );
                 }
@@ -85,6 +104,53 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SearchOverview extends StatelessWidget {
+  final List<String> history;
+  final List recentlyViewed;
+  final ValueChanged<String> onQuerySelected;
+
+  const _SearchOverview({
+    required this.history,
+    required this.recentlyViewed,
+    required this.onQuerySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (history.isEmpty && recentlyViewed.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      children: [
+        if (history.isNotEmpty) ...[
+          Text('История поиска', style: AppTextStyles.heading2),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: history
+                .map(
+                  (query) => ActionChip(
+                    label: Text(query),
+                    onPressed: () => onQuerySelected(query),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 24),
+        ],
+        if (recentlyViewed.isNotEmpty) ...[
+          Text('Недавно просмотренные', style: AppTextStyles.heading2),
+          const SizedBox(height: 8),
+          ...recentlyViewed.map((movie) => MovieListItem(movie: movie)),
+        ],
+      ],
     );
   }
 }

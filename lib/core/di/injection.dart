@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import '../database/app_database.dart';
 import '../network/dio_client.dart';
+import '../../features/movies/data/datasources/movie_local_data_source.dart';
 import '../../features/movies/data/datasources/movie_remote_data_source.dart';
 import '../../features/movies/data/repositories/movie_repository_impl.dart';
 import '../../features/movies/domain/repositories/movie_repository.dart';
+import '../../features/movies/domain/usecases/get_search_overview_usecase.dart';
+import '../../features/movies/domain/usecases/mark_movie_viewed_usecase.dart';
 import '../../features/movies/domain/usecases/search_movies_usecase.dart';
 import '../../features/movies/presentation/bloc/movie_search_bloc.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -31,6 +35,7 @@ final getIt = GetIt.instance;
 Future<void> setupDependencyInjection() async {
   // --- Core ---
   getIt.registerLazySingleton(() => DioClient.create());
+  getIt.registerLazySingleton(() => AppDatabase());
 
   // --- Feature: Auth ---
   getIt.registerLazySingleton(() => FirebaseAuth.instance);
@@ -54,6 +59,8 @@ Future<void> setupDependencyInjection() async {
   );
 
   // --- Feature: Movies ---
+  getIt.registerLazySingleton(() => MovieLocalDataSource(getIt()));
+
   // Data source: создаётся один раз на всё приложение (singleton)
   getIt.registerLazySingleton(() => MovieRemoteDataSource(getIt()));
 
@@ -62,15 +69,17 @@ Future<void> setupDependencyInjection() async {
   // Это и есть суть Dependency Injection — presentation слой попросит
   // MovieRepository и не будет знать, что за реализация под капотом.
   getIt.registerLazySingleton<MovieRepository>(
-    () => MovieRepositoryImpl(getIt()),
+    () => MovieRepositoryImpl(getIt(), getIt()),
   );
 
   // Use case
   getIt.registerLazySingleton(() => SearchMoviesUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetSearchOverviewUseCase(getIt()));
+  getIt.registerLazySingleton(() => MarkMovieViewedUseCase(getIt()));
 
   // BLoC: НЕ singleton — каждый раз, когда он нужен, создаём новый
   // экземпляр (factory), чтобы старое состояние не "утекало" между экранами
-  getIt.registerFactory(() => MovieSearchBloc(getIt()));
+  getIt.registerFactory(() => MovieSearchBloc(getIt(), getIt(), getIt()));
 
   // --- Feature: Watchlist ---
   getIt.registerLazySingleton(() => FirebaseFirestore.instance);

@@ -14,7 +14,17 @@ abstract class MovieSearchState extends Equatable {
 
 /// Начальное состояние — пользователь ещё ничего не искал
 class MovieSearchInitial extends MovieSearchState {
-  const MovieSearchInitial({super.query = ''});
+  final List<String> history;
+  final List<Movie> recentlyViewed;
+
+  const MovieSearchInitial({
+    super.query = '',
+    this.history = const [],
+    this.recentlyViewed = const [],
+  });
+
+  @override
+  List<Object?> get props => [query, history, recentlyViewed];
 }
 
 /// Идёт загрузка
